@@ -23,15 +23,6 @@
 
 	<property name="www.dir" value="src/main/www" />
 
-	<switch value="${devtype}">
-		<case value="bb">
-			<var name="www" value="www-bb" />
-		</case>
-		<default>
-			<var name="www" value="www" />
-		</default>
-	</switch>
-
 	<target name="phonegap" depends="prepare.dirs, www">
 		<exec executable="tools/phoneGapBuild.sh">
 			<arg value="/tmp/iiCaptain-s-Ship" />
@@ -49,25 +40,6 @@
 			<fileset dir="src/main/www">
 			</fileset>
 		</copy>
-
-		<switch value="${devtype}">
-			<case value="bb">
-				<exec executable="sed" output="${www.dir}/index.html">
-					<arg value="-e" />
-					<arg value="s/isbb = false/isbb=true/" />
-					<arg value="${www.dir}/index.html" />
-				</exec>
-				<delete>
-					<fileset dir="${www}/splashes">
-						<exclude name="splash-bb.png" />
-					</fileset>
-					<fileset dir="${www}/icons">
-						<exclude name="icon.png" />
-					</fileset>
-				</delete>
-			</case>
-			<default />
-		</switch>
 	</target>
 
 	<target name="clean">
@@ -112,34 +84,6 @@
 	</target>
 
 
-	<target name="vFabricApplicationDirectorDeploy">
-		<exec executable="java" output="/tmp/ip.txt">
-			<arg value="-cp" />
-			<arg value="${mycp}" />
-			<arg value="org.springsource.vfabric.tools.AppDirector" />
-			<arg value="${user}" />
-			<arg value="${passwd}" />
-			<arg value="${appdIp}" />
-			<arg value="${deploymentProfileId}" />
-			<arg value="${nodename}" />
-			<arg value="${data}" />
-		</exec>
-	</target>
-
-	<target name="vFabricAPMCreateApp">
-		<exec executable="java">
-			<arg value="-cp" />
-			<arg value="${mycp}" />
-			<arg value="org.springsource.vfabric.tools.APM" />
-			<arg value="${apmuser}" />
-			<arg value="${apmpasswd}" />
-			<arg value="${apmIp}" />
-			<arg value="8443" />
-			<arg value="${appname}"/>
-			<arg value="${description}" />
-		</exec>
-	</target>
-	
 	<target name="JMeter">
 			<exec executable="./createProperties.sh" dir="jmeter" />
 			<exec executable="apache-jmeter-2.7/bin/jmeter" dir="jmeter" >
