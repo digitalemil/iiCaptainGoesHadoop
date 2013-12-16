@@ -1,0 +1,142 @@
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html>
+  <head>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="viewport" content="user-scalable=no, width=device-width,  initial-scale=0.5, minimum-scale=0.5,  maximum-scale=2"/>
+<style>
+* {
+	-webkit-user-drag: none;
+	-webkit-touch-callout: none;
+	/* prevent callout to copy image, etc when tap to hold */
+	-webkit-text-size-adjust: none;
+	/* prevent webkit from resizing text to fit */
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	/* make transparent link [ remove highlighting ] selection, adjust last value opacity 0 to 1.0 */
+}
+</style>
+<style>
+canvas {
+	border: 0px solid black;
+}
+</style>
+    <meta charset="utf-8">
+    <title>iiCaptain Player Distribution</title>
+    <link href="../../map.css" rel="stylesheet">
+  <script src="openres/jquery-1.9.1.js"></script>
+  <script src="openres/jquery-ui-1.10.3.js"></script>
+<script>
+  $(function() {
+    $( "#fromdatepicker" ).datepicker({
+        dateFormat: "dd/mm/yy",
+        numberOfMonths: 1,
+        onClose: function(selectedDate) {
+			try {        	
+        		var fromdate= selectedDate.split("/");
+        		var fd= new Date(fromdate[2], fromdate[1]-1, fromdate[0]);
+        		fms= Date.parse(fd)-978307200000;
+			}
+			catch(e) {
+				fms= Date.parse(new Date());
+			}
+
+        	var todate=$( "#todatepicker" ).val();
+        	try {
+        		if(todate=="")
+        			tms= Date.parse(new Date())-978307200000;
+        		else {
+        			var todate= todate.split("/");
+        			var td= new Date(todate[2], todate[1]-1, todate[0]);
+        			var tms= Date.parse(td)-978307200000;
+        		}
+        	}
+        	catch(e) {
+				tms= Date.parse(new Date())-978307200000;
+			}
+        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fms+" and timestamp < "+tms);
+        }
+        });
+    $( "#todatepicker" ).datepicker({
+        dateFormat: "dd/mm/yy",
+        numberOfMonths: 1,
+        onClose: function(selectedDate) {
+        	var fromdate=$( "#fromdatepicker" ).val();
+            
+        	try {   
+        		if(fromdate=="")
+        			tms= Date.parse(new Date())-978307200000;
+        		else {
+        		var fromdate= fromdate.split("/");
+        		var fd= new Date(fromdate[2], fromdate[1]-1, fromdate[0]);
+        		var fms= Date.parse(fd)-978307200000;
+        		}
+      		}
+			catch(e) {
+				fms= Date.parse(new Date())-978307200000;
+			}
+
+        	try {
+        		var todate= selectedDate.split("/");
+        		var td= new Date(todate[2], todate[1]-1, todate[0]);
+        		var tms= Date.parse(td)-978307200000;
+        	}
+        	catch(e) {
+				tms= Date.parse(new Date());
+			}
+        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fms+" and timestamp < "+tms);
+       }
+        });
+  });
+  </script>
+    <script>
+
+      function execQuery() {
+      		var q= $( "#query" ).val();
+      		alert(q);
+    	  
+    	  window.open("/world/analytics/longterm?query="+q);
+      	
+      
+      }     
+      
+      function initialize() {
+    	  
+		var id= document.getElementById("iiCaptain");
+    		w = window.innerWidth;
+    		h = window.innerHeight;
+    		// 920, 576
+    		var perfcor = 0;
+    		scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
+    		sX = (w - perfcor * 64) / 960;
+    		sY = (h - perfcor * 64) / 640;
+    		
+    		var bgimg = new Image();
+    		bgimg.src = "openres/start.png";
+    		bgimg.setAttribute("id", "start");
+    		id.appendChild(bgimg);
+
+    		bgimg.setAttribute("style", "position:absolute; top:0px; left:0px; width: "
+    				+ window.innerWidth + "px; height: " + window.innerHeight + "px;");
+	
+    		id= document.getElementById("map_canvas");
+    		id.setAttribute("style", "position:absolute; top:" + (400*sY)
+    				+ "px; left:" + ((960 - 480 * 1.5) / 2) * sX + "px; width: "
+    				+ (480 * sX * 1.5) + "px; height: " + (320 * sY * 1.5) + "px;");
+    		var z= Math.floor(1.5*sX);
+    	//	alert("zoom: "+z);
+      }
+    </script>
+  </head>
+  <body onload="initialize()">
+  <div id="iiCaptain" style="position:absolute; top:0px; left: 0px;">
+	</div>
+    <div id="map_canvas">
+    <p><input style="width: 80%" type="text" id="query" value="Select longitude, latitude From HiiCaptain"><input type="button" value="Execute" id="exec" onclick="execQuery()">
+    <p>From: <input type="text" id="fromdatepicker"> To: <input type="text" id="todatepicker"></p></div>
+  </body>
+</html>
+
