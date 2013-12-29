@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.protobuf.ServiceException;
 
@@ -41,25 +42,28 @@ public class AnalyticsController {
 	JdbcTemplate hive;
 
 	@RequestMapping(value = { "/analytics/longterm" }, method = RequestMethod.GET)
-	public String longterm(Model model) {
-		System.out.println("Longterm:");
-		System.out.println("Executing queries.");
-		List<Map<String, Object>> hiverows = hive
-				.queryForList("select longitude, latitude from iiCaptain");
+	public String longterm(Model model, @RequestParam("query") String query) {
+		System.out.println("Longterm Analytics.");
+		System.out.println("Executing query: "+query);
 		HashMap<Location, Integer> locations = new HashMap<Location, Integer>();
-
+/*
 		try {
 			hive.execute("drop table hiicaptain");
 		}
 		catch(Exception e) {	
+			System.err.println("Cann't drop table hiicaptain");
 		}
-		
+*/		
 		try {
 			hive.execute("FROM iiCaptain i INSERT OVERWRITE Table HiiCaptain Select i.user, i.longitude, i.latitude, i.timestamp");
 		}
 		catch(Exception e) {	
+			System.err.println("Insert into HiiCaptain failed.");			
 		}
 		
+		List<Map<String, Object>> hiverows = hive
+				.queryForList(query);
+
 		System.out.println("Results: "+hiverows);
 		long total = 0;
 		int locs = 0;

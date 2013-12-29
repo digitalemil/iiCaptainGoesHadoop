@@ -11,9 +11,11 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import net.iicaptain.homeport.CreatorService;
-import net.iicaptain.homeport.creator.*;
+import net.iicaptain.homeport.creator.World;
+
 
 public class CreatorServiceImpl implements CreatorService {
 	String pathToJSFile;

@@ -35,72 +35,60 @@ canvas {
         dateFormat: "dd/mm/yy",
         numberOfMonths: 1,
         onClose: function(selectedDate) {
-			try {        	
-        		var fromdate= selectedDate.split("/");
-        		var fd= new Date(fromdate[2], fromdate[1]-1, fromdate[0]);
-        		fms= Date.parse(fd)-978307200000;
-			}
-			catch(e) {
-				fms= Date.parse(new Date());
-			}
-
+        	var fromdate=$( "#fromdatepicker" ).val();
         	var todate=$( "#todatepicker" ).val();
-        	try {
-        		if(todate=="")
-        			tms= Date.parse(new Date())-978307200000;
-        		else {
-        			var todate= todate.split("/");
-        			var td= new Date(todate[2], todate[1]-1, todate[0]);
-        			var tms= Date.parse(td)-978307200000;
-        		}
-        	}
-        	catch(e) {
-				tms= Date.parse(new Date())-978307200000;
-			}
-        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fms+" and timestamp < "+tms);
+            
+        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fromdate+" and timestamp < "+todate);
         }
         });
     $( "#todatepicker" ).datepicker({
         dateFormat: "dd/mm/yy",
         numberOfMonths: 1,
         onClose: function(selectedDate) {
-        	var fromdate=$( "#fromdatepicker" ).val();
+         	var fromdate=$( "#fromdatepicker" ).val();
+        	var todate=$( "#todatepicker" ).val();
             
-        	try {   
-        		if(fromdate=="")
-        			tms= Date.parse(new Date())-978307200000;
-        		else {
-        		var fromdate= fromdate.split("/");
-        		var fd= new Date(fromdate[2], fromdate[1]-1, fromdate[0]);
-        		var fms= Date.parse(fd)-978307200000;
-        		}
-      		}
-			catch(e) {
-				fms= Date.parse(new Date())-978307200000;
-			}
-
-        	try {
-        		var todate= selectedDate.split("/");
-        		var td= new Date(todate[2], todate[1]-1, todate[0]);
-        		var tms= Date.parse(td)-978307200000;
-        	}
-        	catch(e) {
-				tms= Date.parse(new Date());
-			}
-        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fms+" and timestamp < "+tms);
-       }
+        	$( "#query" ).val("Select longitude, latitude from HiiCaptain Where timestamp > "+fromdate+" and timestamp < "+todate);
+        }
         });
   });
   </script>
     <script>
 
       function execQuery() {
-      		var q= $( "#query" ).val();
-      		alert(q);
+      	var fromdate=$( "#fromdatepicker" ).val();      
+      	var fms, tms;
+      	try {
+      		if(fromdate=="")
+    			fms= Date.parse(new Date())-978307200000;
+      		else {
+    			var fdate= fromdate.split("/");
+    			var fd= new Date(fdate[2], fdate[1]-1, fdate[0]);
+    			fms= Date.parse(fd)-978307200000;
+      		}
+    	}
+    	catch(e) {
+			fms= Date.parse(new Date());
+		}
+
+       	var todate=$( "#todatepicker" ).val();
+      try {
+    		if(todate=="")
+    			tms= Date.parse(new Date())-978307200000;
+    		else {
+    			var tdate= todate.split("/");
+    			var td= new Date(tdate[2], tdate[1]-1, tdate[0]);
+    			tms= Date.parse(td)-978307200000;
+    		}
+    	}
+     	catch(e) {
+			tms= Date.parse(new Date());
+		}
+
+    	var q= "Select longitude, latitude from HiiCaptain Where timestamp > "+fms+" and timestamp < "+tms;  
+    	alert("Query: "+q);
     	  
-    	  window.open("/world/analytics/longterm?query="+q);
-      	
-      
+    	window.open("/world/analytics/longterm?query="+q);
       }     
       
       function initialize() {
@@ -135,7 +123,7 @@ canvas {
   <div id="iiCaptain" style="position:absolute; top:0px; left: 0px;">
 	</div>
     <div id="map_canvas">
-    <p><input style="width: 80%" type="text" id="query" value="Select longitude, latitude From HiiCaptain"><input type="button" value="Execute" id="exec" onclick="execQuery()">
+    <p><input style="width: 80%" type="text" id="query" disabled="disabled" value="Select longitude, latitude From HiiCaptain"><input type="button" value="Execute" id="exec" onclick="execQuery()">
     <p>From: <input type="text" id="fromdatepicker"> To: <input type="text" id="todatepicker"></p></div>
   </body>
 </html>

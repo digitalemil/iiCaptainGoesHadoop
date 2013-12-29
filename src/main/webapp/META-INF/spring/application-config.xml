@@ -15,7 +15,7 @@
 
 	<import resource="hadoop.xml" />
 
-	<context:component-scan base-package="net.iicaptain.homeport.impl"></context:component-scan>
+	<context:component-scan base-package="net.iicaptain"></context:component-scan>
 
 	<bean id="creator" class="net.iicaptain.homeport.impl.CreatorServiceImpl">
 		<property name="pathToJSFile" value="/js/Creator.js"></property>
