@@ -37,23 +37,20 @@ public class AnalyticsController {
 
 //	@Autowired
 //	HbaseTemplate ht;
-
+// 	Uncomment for HBase
+	
+	
 	@Autowired
 	JdbcTemplate hive;
-
+//  For Hive. Comment for HBase
+	
+//  Hive / Longterm	
 	@RequestMapping(value = { "/analytics/longterm" }, method = RequestMethod.GET)
 	public String longterm(Model model, @RequestParam("query") String query) {
 		System.out.println("Longterm Analytics.");
 		System.out.println("Executing query: "+query);
 		HashMap<Location, Integer> locations = new HashMap<Location, Integer>();
-/*
-		try {
-			hive.execute("drop table hiicaptain");
-		}
-		catch(Exception e) {	
-			System.err.println("Cann't drop table hiicaptain");
-		}
-*/		
+
 		try {
 			hive.execute("FROM iiCaptain i INSERT OVERWRITE Table HiiCaptain Select i.user, i.longitude, i.latitude, i.timestamp");
 		}
@@ -111,6 +108,8 @@ public class AnalyticsController {
 	}
 	
 	
+	
+//	HBase / Realtime
 //	@RequestMapping(value = { "/analytics/realtime" }, method = RequestMethod.GET)
 //	public String realtime(Model model) {
 //		System.out.println("realtime:");

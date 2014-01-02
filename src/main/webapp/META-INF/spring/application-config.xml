@@ -25,7 +25,7 @@
 	<int:channel id="worldsToBackend"></int:channel>
 
 	<bean id="flumeAdaptor" class="com.hortonworks.digitalemil.flume.MyRpcClientFacade">
-		<constructor-arg name="hostname" value="172.16.227.8" />
+		<constructor-arg name="hostname" value="tomcatvm" />
 		<constructor-arg name="port" value="44444" />
 	</bean>
 

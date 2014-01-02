@@ -10,8 +10,9 @@
 	<hdp:configuration>
 		fs.default.name=hdfs://sandbox:8020
 	</hdp:configuration>
- 
-		<bean id="hive-driver" class="org.apache.hive.jdbc.HiveDriver" />
+<!--  Hive config, make it a comment when building for HBase -->
+
+	<bean id="hive-driver" class="org.apache.hive.jdbc.HiveDriver" />
 
 	<bean id="hive-ds"
 		class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
@@ -19,14 +20,18 @@
 	</bean>
 	<bean id="template" class="org.springframework.jdbc.core.JdbcTemplate"
 		c:data-source-ref="hive-ds" />
-<!-- 
-		<hdp:hbase-configuration zk-quorum="sandbox"
+<!-- Hive config end -->
+
+<!--  HBase config, make it a comment when building for Hive -->
+<!--  
+	<hdp:hbase-configuration zk-quorum="sandbox"
 		zk-port="2181" configuration-ref="hadoopConfiguration">
 		zookeeper.znode.parent=/hbase-unsecure
 		hbase.rootdir=hdfs://sandbox:8020/apps/hbase/data/
 	</hdp:hbase-configuration>
 
 	<bean id="htemplate" class="org.springframework.data.hadoop.hbase.HbaseTemplate"
-		p:configuration-ref="hbaseConfiguration" />
- --> 
+		p:configuration-ref="hbaseConfiguration" /> 
+ -->
+ <!-- HBase config end -->
 </beans>

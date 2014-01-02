@@ -6,8 +6,8 @@
 
 
 
-	<jdbc:embedded-database id="dataSource" type="HSQL"></jdbc:embedded-database> 
-
+	<jdbc:embedded-database id="dataSource" type="DERBY"></jdbc:embedded-database> 
+	
 	<jdbc:initialize-database data-source="dataSource"
 		ignore-failures="DROPS">
 		<jdbc:script location="/WEB-INF/sql/security-schema.sql" />
