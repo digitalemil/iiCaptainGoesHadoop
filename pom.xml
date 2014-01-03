@@ -93,24 +93,20 @@
 		</dependency>
 
 		<dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>1.8.0.10</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.10.1.1</version>
 		</dependency>
 
 		<!--  HBase and Hive config. Choose exactly one -->
-		<!-- 
+ <!-- 
+		 
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase-client</artifactId>
 			<version>0.96.0.2.0.6.0-76-hadoop2</version>
 		</dependency>
- -->
+ -->		
 
 		<dependency>
 			<groupId>org.apache.hive</groupId>

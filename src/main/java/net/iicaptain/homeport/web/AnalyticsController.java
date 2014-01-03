@@ -44,7 +44,6 @@ public class AnalyticsController {
 	JdbcTemplate hive;
 //  For Hive. Comment for HBase
 	
-//  Hive / Longterm	
 	@RequestMapping(value = { "/analytics/longterm" }, method = RequestMethod.GET)
 	public String longterm(Model model, @RequestParam("query") String query) {
 		System.out.println("Longterm Analytics.");
@@ -108,8 +107,6 @@ public class AnalyticsController {
 	}
 	
 	
-	
-//	HBase / Realtime
 //	@RequestMapping(value = { "/analytics/realtime" }, method = RequestMethod.GET)
 //	public String realtime(Model model) {
 //		System.out.println("realtime:");

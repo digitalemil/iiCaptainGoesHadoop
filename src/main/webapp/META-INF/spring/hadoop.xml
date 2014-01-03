@@ -20,10 +20,11 @@
 	</bean>
 	<bean id="template" class="org.springframework.jdbc.core.JdbcTemplate"
 		c:data-source-ref="hive-ds" />
+		
 <!-- Hive config end -->
 
 <!--  HBase config, make it a comment when building for Hive -->
-<!--  
+<!-- 
 	<hdp:hbase-configuration zk-quorum="sandbox"
 		zk-port="2181" configuration-ref="hadoopConfiguration">
 		zookeeper.znode.parent=/hbase-unsecure
@@ -32,6 +33,6 @@
 
 	<bean id="htemplate" class="org.springframework.data.hadoop.hbase.HbaseTemplate"
 		p:configuration-ref="hbaseConfiguration" /> 
- -->
+  -->
  <!-- HBase config end -->
 </beans>
