@@ -92,28 +92,22 @@
 			<version>2.0.0.BUILD-SNAPSHOT</version>
 		</dependency>
 
+		<!-- <dependency> <groupId>org.apache.derby</groupId> <artifactId>derby</artifactId> 
+			<version>10.10.1.1</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
+			<artifactId>derbyclient</artifactId>
 			<version>10.10.1.1</version>
 		</dependency>
 
-		<!--  HBase and Hive config. Choose exactly one -->
- <!-- 
-		 
-		<dependency>
-			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase-client</artifactId>
-			<version>0.96.0.2.0.6.0-76-hadoop2</version>
-		</dependency>
- -->		
-
+		<!-- HBase and Hive config. Choose exactly one -->
+		<!-- <dependency> <groupId>org.apache.hbase</groupId> <artifactId>hbase-client</artifactId> 
+			<version>0.96.0.2.0.6.0-76-hadoop2</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.hive</groupId>
 			<artifactId>hive-jdbc</artifactId>
 			<version>0.12.0.2.0.6.0-76</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
 			<artifactId>spring-integration-core</artifactId>
