@@ -3,13 +3,8 @@ var creation_state;
 var creation_maxstate;
 var location;
 
-function onGeoSuccess(position) {
-	latitude= position.coords.latitude;
-	longitude= position.coords.longitude;
-	var url= "../world/location?latitude="+latitude+"&longitude="+longitude+"&altitude="+position.coords.altitude+"&accuracy="+position.coords.accuracy+
-		"&altitudeAccuracy="+position.coords.altitudeAccuracy+"&heading"+position.coords.heading+"&speed="+position.coords.speed+"&timestamp="+position.timestamp;
-	console.log("sending Location to url: " + url+ " "+location);
 
+function hitUrl(url) {
 	if (window.XMLHttpRequest) {
 		try {
 			req = new XMLHttpRequest();
@@ -39,10 +34,27 @@ function onGeoSuccess(position) {
 	}
 }
 
+function onGeoSuccess(position) {
+	latitude= position.coords.latitude;
+	longitude= position.coords.longitude;
+	var url= "../world/location?latitude="+latitude+"&longitude="+longitude+"&altitude="+position.coords.altitude+"&accuracy="+position.coords.accuracy+
+		"&altitudeAccuracy="+position.coords.altitudeAccuracy+"&heading"+position.coords.heading+"&speed="+position.coords.speed+"&timestamp="+position.timestamp;
+	console.log("sending Location to url: " + url+ " "+location);
+
+	hitUrl(url);
+
+}
+
 // onError Callback receives a PositionError object
 //
 function onGeoError(error) {
-	console.log("error sending Location to url: " + url+ " "+location);
+	try {
+		var url2= "../world/location?latitude=51.28096806284246&longitude=6.766726969858167&altitude=null&accuracy=65&altitudeAccuracy=null&headingnull&speed=null";
+		hitUrl(url2);
+	}
+	catch(e) {
+		console.log("error sending Location to url (No internet connection?): " + url+ " "+location);
+	}
 }
 
 function drawWait() {

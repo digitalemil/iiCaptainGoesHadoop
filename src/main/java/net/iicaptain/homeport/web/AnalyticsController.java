@@ -48,9 +48,10 @@ public class AnalyticsController {
 	public String longterm(Model model, @RequestParam("query") String query) {
 		System.out.println("Longterm Analytics.");
 		System.out.println("Executing query: "+query);
+		
 		HashMap<Location, Integer> locations = new HashMap<Location, Integer>();
-
 		try {
+		//	hive.getDataSource().getConnection().set
 			hive.execute("FROM iiCaptain i INSERT OVERWRITE Table HiiCaptain Select i.user, i.longitude, i.latitude, i.timestamp");
 		}
 		catch(Exception e) {	
@@ -110,9 +111,7 @@ public class AnalyticsController {
 	@RequestMapping(value = { "/analytics/realtime" }, method = RequestMethod.GET)
 	public String realtime(Model model) {
 		System.out.println("realtime:");
-
 	
-		
 		List<String> rows = ht.find("iicaptain-1min", "l", new RowMapper<String>() {
 
 			@Override

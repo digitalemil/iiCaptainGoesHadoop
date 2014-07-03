@@ -41,6 +41,10 @@ public class CreatorController {
 	@Qualifier("worldsToBackend")
 	MessageChannel worldsChannel;
 
+	@Autowired
+	@Qualifier("locationsToKafka")
+	MessageChannel locationsToKafkaChannel;
+	
 	@RequestMapping(value = { "/location" }, method = RequestMethod.GET)
 	public @ResponseBody
 	String location(
@@ -52,26 +56,32 @@ public class CreatorController {
 			@RequestParam(value = "heading", required = false) String heading,
 			@RequestParam(value = "speed", required = false) String speed,
 			@RequestParam(value = "timestamp", required = false) String timestamp,
+			@RequestParam(value = "iata", required = false) String airport,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		String user = "anonymous";
 		String val = null;
+		if(airport!= null)
+			user= airport;
 		try {
 			user = request.getUserPrincipal().getName();
 		} catch (NullPointerException e) {
 
 		}
 		String key = user + ":" + System.currentTimeMillis();
-		System.out.println("User: " + user);
+		
 		val = user + "," + request.getRemoteAddr() + "," + latitude + ","
 				+ longitude + "," + altitude + "," + accuracy + ","
 				+ altitudeAccuracy + "," + heading + "," + speed + ","
 				+ timestamp + "," + System.currentTimeMillis();
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put(key, val);
+		System.out.println("User: " + user+" "+val);
+		
 		locationsChannel.send(MessageBuilder.withPayload(map)
 				.setHeader("RowKey", user).setHeader("ColumnFamily", "l")
 				.build());
+		locationsToKafkaChannel.send(MessageBuilder.withPayload(map).setHeader("RowKey", user).build());
 		return null;
 	}
 

@@ -27,8 +27,9 @@
 
 	<int:channel id="locationsToBackend"></int:channel>
 	<int:channel id="worldsToBackend"></int:channel>
+	<int:channel id="locationsToKafka"></int:channel>
+	
 
-<!-- 
 	<bean id="kafkaAdaptor" class="net.iicaptain.homeport.kafka.KafkaAdapter">
 		<constructor-arg name="brokerList" value="tomcatvm:9092" />
 		<constructor-arg name="serializer" value="kafka.serializer.StringEncoder" />
@@ -37,12 +38,9 @@
 		<constructor-arg name="acks" value="1" />
 	</bean>
 
-	<int:service-activator input-channel="locationsToBackend"
+	<int:service-activator input-channel="locationsToKafka"
 		ref="kafkaAdaptor" method="sendLocations" />
-	<int:service-activator input-channel="worldsToBackend"
-		ref="kafkaAdaptor" method="sendWorlds" />
- -->
- 
+	
 	<bean id="flumeAdaptor" class="com.hortonworks.digitalemil.flume.MyRpcClientFacade"> 
 		<constructor-arg name="hostname" value="tomcatvm" /> <constructor-arg name="port" 
 		value="44444" /> </bean> 

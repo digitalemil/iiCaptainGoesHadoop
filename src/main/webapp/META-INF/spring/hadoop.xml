@@ -16,7 +16,7 @@
 
 	<bean id="hive-ds"
 		class="org.springframework.jdbc.datasource.SimpleDriverDataSource"
-		c:driver-ref="hive-driver" c:url="jdbc:hive2://sandbox:10000/default">
+		c:driver-ref="hive-driver" c:url="jdbc:hive2://sandbox:10000/default" c:username="iicaptain" c:password="iicaptain">
 	</bean>
 	<bean id="template" class="org.springframework.jdbc.core.JdbcTemplate"
 		c:data-source-ref="hive-ds" />

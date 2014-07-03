@@ -9,7 +9,12 @@
 		 http://www.springframework.org/schema/integration
             http://www.springframework.org/schema/integration/spring-integration-3.0.xsd">
 
-	<context:component-scan base-package="net.iicaptain.homeport" ><context:exclude-filter type="regex" expression=".*My.*"/><context:exclude-filter type="regex" expression=".*Analytics.*"/></context:component-scan>
+	<context:component-scan base-package="net.iicaptain.homeport">
+		<context:exclude-filter type="regex"
+			expression=".*My.*" />
+		<context:exclude-filter type="regex"
+			expression=".*Analytics.*" />
+	</context:component-scan>
 
 	<bean id="creator" class="net.iicaptain.homeport.impl.CreatorServiceImpl">
 		<property name="pathToJSFile" value="/js/Creator.js"></property>
@@ -17,4 +22,5 @@
 
 	<int:channel id="locationsToBackend"></int:channel>
 	<int:channel id="worldsToBackend"></int:channel>
+	<int:channel id="locationsToKafka"></int:channel>
 </beans>

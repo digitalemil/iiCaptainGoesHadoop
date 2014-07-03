@@ -17,11 +17,14 @@ var localworld = false;
 var longitude;
 var latitude;
 var mapcdx, mapcdy;
+var locationTimer= null;
 
 var server = "iicaptain.cloudfoundry.com";
 var user = "guest";
 var passwd = "guest";
 var vita = false;
+
+
 if (navigator.userAgent.match(".*Vita.*")) {
 	scale = 1;
 	sx = sy = 1;
@@ -32,6 +35,14 @@ if (navigator.userAgent.match(".*Vita.*")) {
 	passwd = localStorage.passwd;
 }
 
+var sendClickEvent= function() {
+	if(locationTimer== null) {
+		return;
+		// local more do not sent events
+	}
+	
+	
+}
 var startSettings = function() {
 	if (server == null)
 		server = "iicaptain.cloudfoundry.com";
@@ -139,7 +150,13 @@ var cleanSettingsScreen = function() {
 };
 
 var startGame = function(local) {
-	// console.log("NONAPP: " + NONAPP);
+//	console.log("NONAPP: " + NONAPP);
+//	console.log(local+" "+locationTimer);
+	if(!local && locationTimer== null) {
+			locationTimer= new MyTimer(sendLocation);
+//			console.log("locTimer startet");
+			locationTimer.start(10000);
+	}
 	if (!local && server == null && NONAPP != false) {
 		alert('Please provide server details first (Under Settings).');
 		return;
@@ -336,7 +353,7 @@ var iiCaptainRealStart = function(id) {
 			+ Math.floor(200 * scale) + "px;");
 	seaimg2.setAttribute("style", "position:absolute; top: "
 			+ Math.floor(16 * scale) + "px; left: " + Math.floor(8 * scale)
-			+ "px; width:" + Math.floor(500 * scale) + "px;");
+			+ "px; width:" + Math.floor(500 * scale) + "px; height: "+ Math.floor(500 * scale));
 
 	canvas.setAttribute("onMouseDown", "iicaptainclick(event);");
 	canvas.setAttribute("onMouseUp", "mousedown=false");
@@ -389,6 +406,8 @@ function iicaptainclick(e) {
 	ex /= scale;
 	ey /= scale;
 
+	
+	
 	var x = Math.floor(ex - canvaswidth / 2);
 	var y = Math.floor(canvasheight / 2 - ey);
 
@@ -410,6 +429,7 @@ var req;
 
 function sendLocation() {
 	req = false;
+	console.log("Sending location");
 	// branch for native XMLHttpRequest object
 	navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
 }
