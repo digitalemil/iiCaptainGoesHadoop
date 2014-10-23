@@ -34,21 +34,17 @@ public class KafkaAdapter {
 	}
 
 	public void sendWorlds(Message msg) {
-		String rowkey = msg.getHeaders().get("RowKey").toString() + ":"
-				+ System.currentTimeMillis() + "w:map";
-		sendDataToKafka(msg.getPayload().toString(), rowkey, "w", "map");
+		sendDataToKafka(msg.getPayload().toString());
 	}
 
 	public void sendLocations(Message msg) {
-		String rowkey = msg.getHeaders().get("RowKey").toString() + ":"
-				+ System.currentTimeMillis() + ":l:loc";
-		sendDataToKafka(msg.getPayload().toString(), rowkey, "l", "loc");
+		sendDataToKafka(msg.getPayload().toString());
 	}
 
-	public void sendDataToKafka(String d, String rowkey, String colfamily,
-			String col) {
+	public void sendDataToKafka(String d) {
 		KeyedMessage<String, String> data = new KeyedMessage<String, String>(
-				"iicaptain", rowkey, d);
+				"iicaptain", d);
+		System.out.println("Sending data to kafka:" +d);
 		try {
 			producer.send(data);
 		} catch (Exception e) {

@@ -34,11 +34,16 @@ canvas {
 
       // Create an object containing LatLng, radius.
       var alllocs= '<c:out value="${locations}"/>';
-      alllocs=alllocs.replace(/;/g, "'");
-      console.log("All: "+alllocs);
+      var autorefresh= <c:out value="${refresh}"/>;
+      var forSolr= <c:out value="${forSolr}"/>;
+      var solrQuery= '<c:out value="${solrQuery}"/>';
+      var circles= new Array();
+      var map;
+      var mapoptions;
       
+      alllocs=alllocs.replace(/;/g, "'");
+      console.log("1: "+alllocs);
       alllocs= eval('(' + alllocs + ')');
-     // alert(alllocs.locations);
       
       var iimap = new Array(alllocs.locations.length);
       
@@ -50,7 +55,82 @@ canvas {
       }
       var circle;
 
-     
+      function updateLocations() {
+    	  if (req.readyState==4 && req.status==200)
+    	    {
+    		  alllocs= req.responseText;
+    	      alllocs=alllocs.replace(/;/g, "'");
+    	      console.log("2: "+alllocs);
+    	      alllocs= eval('(' + alllocs + ')');
+    
+    	      iimap = new Array(alllocs.locations.length);
+    	      for(var l= 0; l< alllocs.locations.length; l++) {
+    	        	iimap[l] = {
+    	          	center: new google.maps.LatLng(alllocs.locations[l].latitude, alllocs.locations[l].longitude),
+    	          	n: Math.min(32, alllocs.locations[l].n)*1000
+    	        	};
+    	      }
+    	      
+    	      for (var i= 0; i< circles.length; i++) {
+ 				circles[i].setMap(null);
+    	      }
+    	      
+    	      for (var i= 0; i< iimap.length; i++) {
+    	          var options = {
+    	            strokeColor: '#FF0000',
+    	            strokeOpacity: 0.8,
+    	            strokeWeight: 2,
+    	            fillColor: '#FF0000',
+    	            fillOpacity: 0.35,
+    	            map: map,
+    	            center: iimap[i].center,
+    	            radius: iimap[i].n*20
+    	          };
+    	          circle = new google.maps.Circle(options);
+    	          circles[i]= circle;
+    	        }
+    	      
+    	      setTimeout(hitDataUrl, 2000);
+    	    }
+      }
+      
+      function hitDataUrl() {
+    		if (window.XMLHttpRequest) {
+    			try {
+    				req = new XMLHttpRequest();
+    			} catch (e) {
+    				req = false;
+    			}
+    			// branch for IE/Windows ActiveX version
+    		} else {
+    			if (window.ActiveXObject) {
+    				try {
+    					req = new ActiveXObject("Msxml2.XMLHTTP");
+    				} catch (e) {
+    					try {
+    						req = new ActiveXObject("Microsoft.XMLHTTP");
+    					} catch (e) {
+    						req = false;
+    					}
+    				}
+    			}
+    		}
+    		if (req) {
+    			req.onreadystatechange = updateLocations;
+    			if(forSolr==true) {
+    				req.open("GET","solrData?"+solrQuery, true);
+    			}
+    			else {
+    				req.open("GET","data", true);			
+    			}
+    			req.send("");
+    		} else {
+    			alert("req== false");
+    		}
+    	}
+
+      
+      
       function initialize() {
     	  
 		var id= document.getElementById("iiCaptain");
@@ -76,16 +156,16 @@ canvas {
     				+ (480 * sX * 1.5) + "px; height: " + (320 * sY * 1.5) + "px;");
     		var z= Math.floor(1.5*sX);
     	//	alert("zoom: "+z);
-        var mapOptions = {
+        mapOptions = {
           zoom: 2,
           center: new google.maps.LatLng(37.09024, -0.712891),
           mapTypeId: google.maps.MapTypeId.TERRAIN
         };
 
-        var map = new google.maps.Map(document.getElementById('map_canvas'),
+        	map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);
 
-        var circles= new Array();
+        
         for (var i= 0; i< iimap.length; i++) {
           var options = {
             strokeColor: '#FF0000',
@@ -95,12 +175,14 @@ canvas {
             fillOpacity: 0.35,
             map: map,
             center: iimap[i].center,
-            radius: iimap[i].n*10
+            radius: iimap[i].n*20
           };
           circle = new google.maps.Circle(options);
           circles[i]= circle;
         }
       }
+      if(autorefresh)
+     	 setTimeout(hitDataUrl, 2000);
     </script>
   </head>
   <body onload="initialize()">

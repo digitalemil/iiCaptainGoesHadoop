@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import net.iicaptain.homeport.CreatorService;
 
 import org.apache.commons.collections.map.HashedMap;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,6 @@ import org.springframework.integration.support.MessageBuilder;
 @Controller
 public class CreatorController {
 
-	
 	private CreatorService creator;
 
 	@Autowired
@@ -44,44 +44,69 @@ public class CreatorController {
 	@Autowired
 	@Qualifier("locationsToKafka")
 	MessageChannel locationsToKafkaChannel;
-	
+
 	@RequestMapping(value = { "/location" }, method = RequestMethod.GET)
 	public @ResponseBody
 	String location(
 			@RequestParam("longitude") String longitude,
 			@RequestParam("latitude") String latitude,
-			@RequestParam(value = "altitude", required = false) String altitude,
-			@RequestParam(value = "accuracy", required = false) String accuracy,
-			@RequestParam(value = "altitudeAccuracy", required = false) String altitudeAccuracy,
-			@RequestParam(value = "heading", required = false) String heading,
-			@RequestParam(value = "speed", required = false) String speed,
+			@RequestParam(value = "altitude", required = false, defaultValue="null") String altitude,
+			@RequestParam(value = "accuracy", required = false, defaultValue="null") String accuracy,
+			@RequestParam(value = "altitudeAccuracy", required = false, defaultValue="null") String altitudeAccuracy,
+			@RequestParam(value = "heading", required = false, defaultValue="null") String heading,
+			@RequestParam(value = "speed", required = false, defaultValue="null") String speed,
 			@RequestParam(value = "timestamp", required = false) String timestamp,
-			@RequestParam(value = "iata", required = false) String airport,
+			@RequestParam(value = "iata", required= false) String airport,
 			HttpServletRequest request, HttpServletResponse response) {
 
 		String user = "anonymous";
 		String val = null;
-		if(airport!= null)
-			user= airport;
+		if (airport != null)
+			user = airport;
 		try {
 			user = request.getUserPrincipal().getName();
+			airport= "n/a";
 		} catch (NullPointerException e) {
 
 		}
-		String key = user + ":" + System.currentTimeMillis();
 		
+		if(timestamp== null)
+			timestamp= System.currentTimeMillis()+"";
+				
+		String key = user + ":" + System.currentTimeMillis();
+
 		val = user + "," + request.getRemoteAddr() + "," + latitude + ","
 				+ longitude + "," + altitude + "," + accuracy + ","
 				+ altitudeAccuracy + "," + heading + "," + speed + ","
 				+ timestamp + "," + System.currentTimeMillis();
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put(key, val);
-		System.out.println("User: " + user+" "+val);
-		
+		System.out.println("User: " + user + " " + val);
+
+	/*
 		locationsChannel.send(MessageBuilder.withPayload(map)
 				.setHeader("RowKey", user).setHeader("ColumnFamily", "l")
 				.build());
-		locationsToKafkaChannel.send(MessageBuilder.withPayload(map).setHeader("RowKey", user).build());
+*/
+		String[] keys = { "user", "latitude", "longitude", "altitude",
+				"accuracy", "altitudeAccuracy", "heading", "speed",
+				"timestamp", "iata" };
+
+		JSONObject json = new JSONObject();
+
+		json.put(keys[0], user);
+		json.put(keys[1], latitude);
+		json.put(keys[2], longitude);
+		json.put(keys[3], altitude);
+		json.put(keys[4], accuracy);
+		json.put(keys[5], altitudeAccuracy);
+		json.put(keys[6], heading);
+		json.put(keys[7], speed);
+		json.put(keys[8], timestamp);
+		json.put(keys[9], airport);
+
+		locationsToKafkaChannel
+				.send(MessageBuilder.withPayload(json.toString()).build());
 		return null;
 	}
 
@@ -107,7 +132,8 @@ public class CreatorController {
 		} catch (NullPointerException e) {
 		}
 		worldsChannel.send(MessageBuilder.withPayload(map)
-				.setHeader("RowKey", user).setHeader("ColumnFamily", "w").build());
+				.setHeader("RowKey", user).setHeader("ColumnFamily", "w")
+				.build());
 		return ret;
 	}
 }

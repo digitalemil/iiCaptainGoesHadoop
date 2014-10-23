@@ -39,8 +39,8 @@ function onGeoSuccess(position) {
 	longitude= position.coords.longitude;
 	var url= "../world/location?latitude="+latitude+"&longitude="+longitude+"&altitude="+position.coords.altitude+"&accuracy="+position.coords.accuracy+
 		"&altitudeAccuracy="+position.coords.altitudeAccuracy+"&heading"+position.coords.heading+"&speed="+position.coords.speed+"&timestamp="+position.timestamp;
-	console.log("sending Location to url: " + url+ " "+location);
-
+	console.log("sending Location to url: " + url+ " "+location+" "+position);
+//alert("sending Location to url: " + url+ " "+location+" "+position);
 	hitUrl(url);
 
 }

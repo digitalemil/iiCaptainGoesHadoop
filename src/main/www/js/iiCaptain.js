@@ -18,7 +18,7 @@ var longitude;
 var latitude;
 var mapcdx, mapcdy;
 var locationTimer= null;
-
+var dialog;
 var server = "iicaptain.cloudfoundry.com";
 var user = "guest";
 var passwd = "guest";
@@ -196,6 +196,10 @@ var iiCaptainSetup = function(id) {
 
 	w = window.innerWidth;
 	h = window.innerHeight;
+	if(w== undefined)
+		w= 960;
+	if(h== undefined)
+		h= 640;
 	// 920, 576
 	var perfcor = 0;
 	scale = Math.min((w - perfcor * 64) / 960, (h - perfcor * 64) / 640);
